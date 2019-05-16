@@ -15,7 +15,7 @@ class Register extends Component{
         event.preventDefault();
         console.log(this.state)
         if(this.state.RegisterName !== '' && this.state.RegisterEmail !== '' && this.state.RegisterPassword !== ''){
-            fetch('http://localhost:8081/register', {
+            fetch('https://vue-react-server.herokuapp.com/register', {
                 method: 'post',
                 headers : {'Content-Type' : 'application/json'},
                 body : JSON.stringify({

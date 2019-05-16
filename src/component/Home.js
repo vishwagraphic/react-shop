@@ -13,7 +13,7 @@ class Home extends Component {
     }
     
     componentDidMount(){
-        Promise.all([fetch('http://localhost:8081/dealsProducts'), fetch('http://localhost:8081/lowCostProducts')])
+        Promise.all([fetch('https://vue-react-server.herokuapp.com/dealsProducts'), fetch('https://vue-react-server.herokuapp.com/lowCostProducts')])
         .then(([res1, res2]) => { 
             return Promise.all([res1.json(), res2.json()]) 
         })

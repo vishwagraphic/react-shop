@@ -13,7 +13,7 @@ class Signin extends Component {
     handleSubmit = (event) => {
         event.preventDefault();
         if(this.state.signInEmail !== '' && this.state.signInPassword !== ''){
-            fetch('http://localhost:8081/signIn', {
+            fetch('https://vue-react-server.herokuapp.com/signIn', {
                 method: 'post',
                 headers : {'Content-Type' : 'application/json'},
                 body : JSON.stringify({
