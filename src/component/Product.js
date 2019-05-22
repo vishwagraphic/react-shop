@@ -13,7 +13,7 @@ class Product extends Component{
         let id = url.substring(url.lastIndexOf('/') + 1)
         fetch(`https://vue-react-server.herokuapp.com/product/${id}`, {
             method: 'POST',
-            mode: 'cors',
+            mode: 'no-cors',
             cache: 'no-cache',
             headers: {
                 'Content-Type': 'application/json'
