@@ -39,3 +39,11 @@ nav{
   width: 500px;
   min-height: 700px;
 }
+.pointer{
+  cursor: pointer;
+}
+.hover{
+  &:hover{
+      color: #0069d9;
+  }
+}

@@ -6,6 +6,7 @@ import Home from './component/Home'
 import About from './component/About'
 import Signin from './component/Signin'
 import Register from './component/Register'
+import Product from './component/Product'
 import './App.scss'
 
 class App extends Component {
@@ -40,6 +41,7 @@ class App extends Component {
             <Route path="/about"  render={() => <About />} />
             <Route path="/signin" render={() => <Signin loadUser={this.loadUser} />}  />
             <Route path="/register" render={() => <Register user={this.state.user} />} />
+            <Route path="/product/:id" render={() => <Product />} />
           </section> 
           <footer>
             <Bottomnav />

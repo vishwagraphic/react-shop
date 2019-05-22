@@ -25,7 +25,6 @@ class Home extends Component {
         });
         function imgurlExtract(products, type) {
             let imgArr = []
-            console.log(products[1].imageurls)
             products.forEach((product, index) => {
                 imgArr = product.imageurls.split(',')
                 for (let i = 0; i < imgArr.length; i++) {
