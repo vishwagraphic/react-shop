@@ -49,7 +49,7 @@ const Topnav = (props) => {
                 </Nav>
                 <Nav className="ml-auto mr-2">
                     {showSignStatus}
-                    <Link to="/" className="px-2 text-white cart-icon" to="/Cart"><span className="cart-count">{props.cart.count}</span><img src={cart} alt="cart" /></Link>
+                    <Link className="px-2 text-white cart-icon" to="/Cart"><span className="cart-count">{props.cart.count}</span><img src={cart} alt="cart" /></Link>
                 </Nav>
             </Navbar>
         </div>    
