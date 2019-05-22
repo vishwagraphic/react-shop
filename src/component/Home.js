@@ -38,12 +38,12 @@ class Home extends Component {
     
     render(){
         const DealsTileArr = this.state.dealProducts.map((data, i) => {
-            return <Tile key={i} id={data.productid} price={data.prices_amountmin} name={data.name}
+            return <Tile cartCount={this.props.cartCount} key={i} id={data.productid} price={data.prices_amountmin} name={data.name}
                         brand={data.brand} imageurl={data.imageurls} rating={data.rating} /> 
         });
 
         const lowCostTileArr = this.state.lowCostProducts.map((data, i) => {
-            return <Tile key={i} id={data.productid} price={data.prices_amountmin} name={data.name}
+            return <Tile cartCount={this.props.cartCount} key={i} id={data.productid} price={data.prices_amountmin} name={data.name}
                         brand={data.brand} imageurl={data.imageurls} rating={data.rating} /> 
         });
         

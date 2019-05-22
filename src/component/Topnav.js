@@ -5,7 +5,6 @@ import logo from '../logo.png'
 import cart from '../cart-icon.png'
 import './Topnav.scss'
 const Topnav = (props) => {
-    console.log(props.user)
     let showSignStatus
     if(props.user.name){
         showSignStatus = <Dropdown as={NavItem}>
@@ -50,7 +49,7 @@ const Topnav = (props) => {
                 </Nav>
                 <Nav className="ml-auto mr-2">
                     {showSignStatus}
-                    <Link to="/" className="px-2 text-white cart-icon"><img src={cart} alt="cart" /></Link>
+                    <Link to="/" className="px-2 text-white cart-icon" to="/Cart"><span className="cart-count">{props.cart.count}</span><img src={cart} alt="cart" /></Link>
                 </Nav>
             </Navbar>
         </div>    

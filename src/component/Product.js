@@ -33,6 +33,7 @@ class Product extends Component{
         })
     }
     render(){
+        console.log(this.props)
         return(
             <div className="container my-3">
                 <Alert variant="info" className="clearfix" >
@@ -60,7 +61,7 @@ class Product extends Component{
                             <p>In Stock</p>
                             <p>Out of Stock</p>
                             <p>Qty </p>
-                            <Button block variant="primary">Add to cart</Button>
+                            <Button block variant="primary" onClick={this.props.cartCount}>Add to cart</Button>
                             <Button block variant="danger">Buy now</Button><br />
                             <p>Sold by Product brand</p>
                             <p>Item arrives in packaging that reveals what's inside.</p>
