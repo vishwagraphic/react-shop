@@ -26,7 +26,8 @@ const Topnav = (props) => {
             id: '',
             name :'',
             email : '',
-            password: ''
+            password: '',
+            cartCount: 0
         }
         props.loadUser(unloadUser)
         localStorage.clear()

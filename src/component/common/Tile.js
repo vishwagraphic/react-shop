@@ -39,7 +39,7 @@ class Tile extends Component {
                                 <li className="px-0">{price}</li>
                             </ul>
                         </div>
-                        <Button variant="primary"><Link to="/" className="text-white" onClick={this.props.cartCount}>Add to cart</Link></Button>
+                        <Button variant="primary"><Link to="/" className="text-white" onClick={this.props.cartDetails}>Add to cart</Link></Button>
                     </Card.Body>
                 </Card>
             </Col>
