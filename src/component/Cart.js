@@ -48,6 +48,7 @@ class Cart extends Component{
                         <div className="font-weight-bold text-danger">{data.prices_amountmin}</div>
                 </Col>
                     <Col >
+                        <div className="">Quantity: {data.quantity}</div>
                         <div className="text-info">Delete</div>
                     </Col>
             </Row>

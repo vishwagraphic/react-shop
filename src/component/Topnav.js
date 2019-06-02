@@ -11,27 +11,11 @@ const Topnav = (props) => {
                 <Dropdown.Toggle as={'div'} className="text-white">Hi, {props.user.name.split(' ')[0]}</Dropdown.Toggle>
                 <Dropdown.Menu>
                   <Link to="/" className="text-white drop-menu">Profile</Link>
-                  <Link to="/signout" className="text-white drop-menu">Signout</Link>
+                  <Link to="/" onClick={props.signOut} className="text-white drop-menu">Signout</Link>
                 </Dropdown.Menu>
             </Dropdown>
     }else{
         showSignStatus = <Link to="/signin" className="px-2 text-white">Signin</Link>
-    }
-    /* props.history.listen((action, location) => {
-
-    }) */
-
-    if(props.history.location.pathname === '/signout'){
-        const unloadUser = {
-            id: '',
-            name :'',
-            email : '',
-            password: '',
-            cartCount: 0
-        }
-        props.loadUser(unloadUser)
-        localStorage.clear()
-        props.history.push('/')
     }
     return(
         <div>

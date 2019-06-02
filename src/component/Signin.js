@@ -7,13 +7,14 @@ class Signin extends Component {
         super(props)
         this.state = {
             signInEmail :'',
-            signInPassword :''
+            signInPassword :'',
+            signInErr: false
         }
     }
     handleSubmit = (event) => {
         event.preventDefault();
         if(this.state.signInEmail !== '' && this.state.signInPassword !== ''){
-            fetch('https://vue-react-server.herokuapp.com/signIn', {
+            fetch('http://localhost:8081/signIn', {
                 method: 'post',
                 headers : {'Content-Type' : 'application/json'},
                 body : JSON.stringify({
@@ -24,14 +25,14 @@ class Signin extends Component {
             .then(response => response.json())
             .then(user => {
                 if(user.name){
-                    this.props.loadUser(user)
+                    this.props.loadUser(user, true)
                     localStorage.setItem('username', user.name)
                     localStorage.setItem('userid', user.id)
                     localStorage.setItem('useremail', user.email)
                     this.props.history.push('/')
                 }
             })
-            .catch(err => console.log(err))
+            .catch(() => this.setState({signInErr : true}))
         }
     }
     onEmailChange = (event) => {
@@ -41,10 +42,16 @@ class Signin extends Component {
         this.setState({signInPassword:event.target.value})
     }
     render(){
-        return(
-                
+        let signInErrMsg
+        if(this.state.signInErr){
+            signInErrMsg = <p className="text-danger">You have entered invalid username or password</p>
+        } else {
+            signInErrMsg = <p className="text-danger"></p>
+        }
+        return(              
             <div className="mb-3">
                 <Container className='container my-5 form-width'>
+                    <div>{signInErrMsg}</div>
                     <Form>
                         <Form.Group controlId="formBasicEmail">
                             <Form.Label>Email address:</Form.Label>
@@ -53,12 +60,13 @@ class Signin extends Component {
 
                         <Form.Group controlId="formBasicPassword">
                             <Form.Label>Password:</Form.Label>
-                            <Form.Control type="password" onChange={this.onPasswordChange} placeholder="Password" />
+                            <Form.Control type="password" autoComplete="passsword" onChange={this.onPasswordChange} placeholder="Password" />
                         </Form.Group>
-                        <Button variant="primary" type="button" className="my-2">
+                        <Button variant="primary" type="button" className="my-2 mb-4 w-100">
                             <Link to="/" className="text-white" onClick={this.handleSubmit}>Signin</Link>
                         </Button>
-                        <Button variant="secondary" type="button" className="my-2 mx-3">
+                        <p className="mb-0">New user? Please register here</p>
+                        <Button variant="secondary" type="button" className="my-2 w-100">
                             <Link to="/register" className="text-white">Register</Link>
                         </Button>
                     </Form>
