@@ -22,7 +22,7 @@ class App extends Component {
       },
       cart: {
         count: localStorage.cartCount || 0,
-        idArr : JSON.parse(localStorage.getItem('idArr')) || []
+        idArr : JSON.parse(localStorage.getItem('idArr')) || {}
       }
     }
     console.log(this.state.cart.idArr)
@@ -36,7 +36,7 @@ class App extends Component {
       },
       cart: {
         count: 0,
-        idArr: []
+        idArr: {}
       }
     })
     localStorage.clear()
@@ -55,37 +55,23 @@ class App extends Component {
       this.getCartDetails()
     }
   }
-
-  /* componentDidMount () {
-    console(localStorage.username)
-    if (localStorage.username) {
-      this.setState({signin : true})
-      this.setState({user: {signin : true}})
-    } else {
-      this.setState({signin : false})
-    }
-  
-  } */
   
   cartDetails = (count, id) => {
-    console.log(count, id)
-    let idArrVal = this.state.cart.idArr || []
-    idArrVal.push(id)
-    
+    console.log(this.state.cart.idArr)
+    let dcount = this.state.cart.idArr || {}
+    dcount[id] = (dcount[id]||0) + 1
     this.setState({cart : {
       count : Number(this.state.cart.count) + Number(count),
-      idArr : idArrVal
+      idArr : dcount
     }})
     localStorage.setItem('cartCount', this.state.cart.count+1)
-    localStorage.setItem('idArr', JSON.stringify(idArrVal))
+    localStorage.setItem('idArr', JSON.stringify(dcount))
     this.updateCart()
   }
 
   updateCart = () => {
     console.log(this.state.cart.idArr)
-      /* var  dcount = {};
-      this.state.cart.idArr.forEach(function(i) { dcount[i] = (dcount[i]||0) + 1;}); */
-      fetch('http://localhost:8081/postCart', {
+      fetch('https://vue-react-server.herokuapp.com/postCart', {
           method: 'put',
           headers : {"Accept": "application/json", 'Content-Type': 'application/json', "Access-Control-Origin": "*"},
           body : JSON.stringify({
@@ -103,9 +89,7 @@ class App extends Component {
       .catch(err => console.log(err))
   }
   postItemCart = () => {
-    /* var  dcount = {};
-    this.state.cart.idArr.forEach(function(i) { dcount[i] = (dcount[i]||0) + 1;}); */
-    fetch('http://localhost:8081/postCart', {
+    fetch('https://vue-react-server.herokuapp.com/postCart', {
           method: 'post',
           headers : {"Accept": "application/json", 'Content-Type': 'application/json', "Access-Control-Origin": "*"},
           body : JSON.stringify({
@@ -123,7 +107,7 @@ class App extends Component {
     .catch(err => console.log('WHAT ERRR' + err))
   }
   getCartDetails = () => {
-    fetch('http://localhost:8081/cartDetails', {
+    fetch('https://vue-react-server.herokuapp.com/cartDetails', {
           method: 'post',
           headers : {'Content-Type' : 'application/json'},
           body : JSON.stringify({

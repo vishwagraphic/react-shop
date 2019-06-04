@@ -8,10 +8,15 @@ class Cart extends Component{
             cartData: []
         };
     }
+
+    /* showProduct = (id) => {
+        this.history.push(`/product/${id}`)
+    } */
+
     componentDidMount(){
         let ids = this.props.cart.idArr
         fetch(`https://vue-react-server.herokuapp.com/cart`, {
-            method: 'POST',
+            method: 'post',
             mode: 'cors',
             cache: 'no-cache',
             headers: {
@@ -40,12 +45,12 @@ class Cart extends Component{
                 </Col>
                 <Col cols="4">
                     <ul className="ltn">
-                        <li className="font-weight-bold pointer hover">{data.name} </li>
+                        <li className="font-weight-bold pointer hover" >{data.name} </li>
                         <li>{data.brand}</li>
                     </ul>
                 </Col>
                 <Col >
-                        <div className="font-weight-bold text-danger">{data.prices_amountmin}</div>
+                        <div className="font-weight-bold text-danger">${data.prices_amountmin}</div>
                 </Col>
                     <Col >
                         <div className="">Quantity: {data.quantity}</div>
