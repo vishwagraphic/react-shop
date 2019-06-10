@@ -8,6 +8,7 @@ import Signin from './component/Signin'
 import Register from './component/Register'
 import Product from './component/Product'
 import Cart from './component/Cart'
+import Products from './component/Products'
 import './App.scss'
 
 class App extends Component {
@@ -57,27 +58,32 @@ class App extends Component {
   }
   
   cartDetails = (count, id) => {
-    console.log(this.state.cart.idArr)
     let dcount = this.state.cart.idArr || {}
-    dcount[id] = (dcount[id]||0) + 1
+    let totalqty = count + dcount[id]
+    if (totalqty !== 0) {
+      dcount[id] = (dcount[id]||0) + count
+    } else {
+      delete dcount[id]
+    }
+    
+    localStorage.setItem('cartCount', parseInt(this.state.cart.count) + parseInt(count))
+    localStorage.setItem('idArr', JSON.stringify(dcount))
+    console.log(localStorage.cartCount)
     this.setState({cart : {
-      count : Number(this.state.cart.count) + Number(count),
+      count : localStorage.cartCount,
       idArr : dcount
     }})
-    localStorage.setItem('cartCount', this.state.cart.count+1)
-    localStorage.setItem('idArr', JSON.stringify(dcount))
-    this.updateCart()
+    this.updateCart(localStorage.cartCount)
   }
 
-  updateCart = () => {
-    console.log(this.state.cart.idArr)
-      fetch('https://vue-react-server.herokuapp.com/postCart', {
+  updateCart = (count) => {
+      fetch('https://vue-react-server.herokuapp.com/cart/postCart', {
           method: 'put',
           headers : {"Accept": "application/json", 'Content-Type': 'application/json', "Access-Control-Origin": "*"},
           body : JSON.stringify({
               email: this.state.user.email,
               productids: this.state.cart.idArr,
-              count : Number(this.state.cart.count) + 1
+              count : count
           })
       })
       .then(response => response.json())
@@ -125,7 +131,6 @@ class App extends Component {
     })
     .catch(err => console.log('WHAT ERRR' + err))
   }
-  
   render(){
     return (
       <div className="App">
@@ -139,7 +144,8 @@ class App extends Component {
             <Route path="/signin" render={() => <Signin loadUser={this.loadUser} />}  />
             <Route path="/register" render={() => <Register user={this.state.user} />} />
             <Route path="/product/:id" render={() => <Product cartDetails={this.cartDetails} />} />
-            <Route path="/Cart" render={() => <Cart cart={this.state.cart} />} />
+            <Route path="/Cart" render={() => <Cart cart={this.state.cart} cartDetails={this.cartDetails} />} />
+            <Route path="/products" render={() => <Products />} />
           </section> 
           <footer>
             <Bottomnav />

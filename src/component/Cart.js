@@ -1,20 +1,22 @@
 import React, {Component} from 'react'
-import { Container, Alert, Row, Col } from 'react-bootstrap';
+import { Container, Alert } from 'react-bootstrap';
+import CartTile from './common/CartTile'
 
 class Cart extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            cartData: []
-        };
+            cartData: [],
+            count : '',
+            id : '',
+            cart : this.props.cart
+        }
     }
-
-    /* showProduct = (id) => {
-        this.history.push(`/product/${id}`)
-    } */
-
+    cartUpdate = (count, id) => {
+        this.props.cartDetails(Number(count), id)
+    }
     componentDidMount(){
-        let ids = this.props.cart.idArr
+        let ids = this.props.cart.idArr || {}
         fetch(`https://vue-react-server.herokuapp.com/cart`, {
             method: 'post',
             mode: 'cors',
@@ -31,38 +33,22 @@ class Cart extends Component{
     }
     
     render(){
-        const cartTile = this.state.cartData.map((data, i) => {
+        const ProductCartTile = this.state.cartData.map((data, i) => {
             let imgArr = []
             imgArr = data.imageurls.split(',')
             for (let i = 0; i < imgArr.length; i++) {
                 if (imgArr[i].indexOf('bbystatic') > -1) {
                     data.imageurls = imgArr[i]
                 }
-            }
-            return <Row key={i}>
-                <Col cols="3">
-                <img width="auto" height="70px" src={data.imageurls} alt="big-product" />
-                </Col>
-                <Col cols="4">
-                    <ul className="ltn">
-                        <li className="font-weight-bold pointer hover" >{data.name} </li>
-                        <li>{data.brand}</li>
-                    </ul>
-                </Col>
-                <Col >
-                        <div className="font-weight-bold text-danger">${data.prices_amountmin}</div>
-                </Col>
-                    <Col >
-                        <div className="">Quantity: {data.quantity}</div>
-                        <div className="text-info">Delete</div>
-                    </Col>
-            </Row>
-        });
+            } 
+            return <CartTile cart={this.props.cart} key={i} cartUpdate={this.cartUpdate} productid={data.productid} price={data.prices_amountmin} name={data.name}
+                       brand={data.brand} imageurl={data.imageurls} quantity={data.quantity} /> 
+        })
         return(
             <div className="container my-3">
                 <Alert variant="secondary" show className="clearfix"><span className="dib py-1 font-weight-bold">Your Cart Details</span></Alert>
                 <Container>
-                    {cartTile}
+                    {ProductCartTile}
                 </Container>
             </div>
         )
