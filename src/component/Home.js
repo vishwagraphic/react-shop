@@ -1,54 +1,53 @@
 import React, {Component} from 'react'
+import {connect} from 'react-redux'
 import Mycarousel from './common/Mycarousel'
 import {Alert, Button, Container, Row} from 'react-bootstrap'
 import {Link} from 'react-router-dom';
 import Tile from './common/Tile'
+import { fetchProducts } from './../redux/actions'
+
+const mapStateToProps = state => {
+    if(state.fetchProducts.isPending === false) {
+        return{
+            dealProducts: state.fetchProducts.dealProducts,
+            isPending : state.fetchProducts.isPending ,
+            lowCostProducts: state.fetchProducts.lowCostProducts,
+            error: state.fetchProducts.error
+        }
+    }else {
+        return {}
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return{
+        onFetchProducts : () => dispatch(fetchProducts())
+    }
+}
 
 class Home extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-          dealProducts: [],
-          lowCostProducts: []
-        };
-    }
-    
-    componentDidMount(){
-        Promise.all([fetch('https://vue-react-server.herokuapp.com/dealsProducts'), fetch('https://vue-react-server.herokuapp.com/lowCostProducts')])
-        .then(([res1, res2]) => { 
-            return Promise.all([res1.json(), res2.json()]) 
-        })
-        .then(([res1, res2]) => {
-            imgurlExtract(res1, 'deals')
-            imgurlExtract(res2, 'lowcost')
-            this.setState({dealProducts : res1})
-            this.setState({lowCostProducts : res2})
-        });
-        function imgurlExtract(products, type) {
-            let imgArr = []
-            products.forEach((product, index) => {
-                imgArr = product.imageurls.split(',')
-                for (let i = 0; i < imgArr.length; i++) {
-                    if (imgArr[i].indexOf('bbystatic') > -1) {
-                        products[index].imageurls = imgArr[i]
-                    }
-                }
-            });
-        }
+
+    componentWillMount(){
+        this.props.onFetchProducts()
     }
     
     render(){
-        const DealsTileArr = this.state.dealProducts.map((data, i) => {
-            return <Tile cartDetails={() => this.props.cartDetails(1, data.productid)} key={i} id={data.productid} price={data.prices_amountmin} name={data.name}
-                        brand={data.brand} imageurl={data.imageurls} rating={data.rating} /> 
-        });
-
-        const lowCostTileArr = this.state.lowCostProducts.map((data, i) => {
-            return <Tile cartDetails={() => this.props.cartDetails(1, data.productid)} key={i} id={data.productid} price={data.prices_amountmin} name={data.name}
-                        brand={data.brand} imageurl={data.imageurls} rating={data.rating} /> 
-        });
-        
+        const {dealProducts, isPending, lowCostProducts, error, cartDetails} = this.props
+        let DealsTileArr, lowCostTileArr
+        if(dealProducts !== undefined && lowCostProducts !== undefined){
+            DealsTileArr = dealProducts.map((data, i) => {
+                return <Tile cartDetails={() => cartDetails(1, data.productid)} key={i} id={data.productid} price={data.prices_amountmin} name={data.name}
+                            brand={data.brand} imageurl={data.imageurls} rating={data.rating} />
+            })
+            
+            lowCostTileArr = lowCostProducts.map((data, i) => {
+                return <Tile cartDetails={() => cartDetails(1, data.productid)} key={i} id={data.productid} price={data.prices_amountmin} name={data.name}
+                            brand={data.brand} imageurl={data.imageurls} rating={data.rating} /> 
+            })
+        }
+       
         return(
+            isPending ? 'Loading' : error ? 'Error' :
             <div className="mb-3">
                 <Mycarousel />
                 <div className="container">
@@ -76,4 +75,4 @@ class Home extends Component {
     }
 }
 
-export default Home;
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

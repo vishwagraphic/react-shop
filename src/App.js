@@ -26,9 +26,8 @@ class App extends Component {
         idArr : JSON.parse(localStorage.getItem('idArr')) || {}
       }
     }
-    console.log(this.state.cart.idArr)
   }
-  
+
   unloaduser = () => {
     this.setState({user : {
         id: '',
@@ -77,7 +76,7 @@ class App extends Component {
   }
 
   updateCart = (count) => {
-      fetch('https://vue-react-server.herokuapp.com/cart/postCart', {
+      fetch('https://vue-react-server.herokuapp.com/postCart', {
           method: 'put',
           headers : {"Accept": "application/json", 'Content-Type': 'application/json', "Access-Control-Origin": "*"},
           body : JSON.stringify({
