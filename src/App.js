@@ -11,7 +11,7 @@ import Product from './component/Product'
 import Cart from './component/Cart'
 import Products from './component/Products'
 import './App.scss'
-import { userDetails } from './redux/actions';
+import { userDetails, cartDetails } from './redux/actions';
 
 const mapStateToProps = state => {
   return{
@@ -20,52 +20,46 @@ const mapStateToProps = state => {
           name: state.userDetails.user.name,
           email: state.userDetails.user.email
       },
-      signIn : state.userDetails.signIn
+      signIn : state.userDetails.signIn,
+      cart: {
+        count: state.cartDetails.cart.count,
+        idArr : state.cartDetails.cart.idArr
+      }
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return{
-    onUserDetails : (user, status) => dispatch(userDetails(user, status))
+    onUserDetails : (user, status) => dispatch(userDetails(user, status)),
+    onCartDetails : cart => dispatch(cartDetails(cart))
   }
 }
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      cart: {
-        count: localStorage.cartCount || 0,
-        idArr : JSON.parse(localStorage.getItem('idArr')) || {}
-      }
-    }
-  }
-  
   unloaduser = () => {
     let user = {
       id: '',
       name : '',
       email: '',
     }
+    let cart = {
+      count: 0,
+      idArr: {}
+    }
     let signInStatus = false
     this.props.onUserDetails(user, signInStatus)
-    this.setState({
-      cart: {
-        count: 0,
-        idArr: {}
-      }
-    })
+    this.props.onCartDetails(cart)
     localStorage.clear()
   }
 
   loadUser = () => {
-    if (this.state.user.email){
+    if (this.props.user.email){
       this.getCartDetails()
     }
   }
   
   cartDetails = (count, id) => {
-    let dcount = this.state.cart.idArr || {}
+    let dcount = this.props.cart.idArr || {}
     let totalqty = count + dcount[id]
     if (totalqty !== 0) {
       dcount[id] = (dcount[id]||0) + count
@@ -73,13 +67,15 @@ class App extends Component {
       delete dcount[id]
     }
     
-    localStorage.setItem('cartCount', parseInt(this.state.cart.count) + parseInt(count))
+    localStorage.setItem('cartCount', parseInt(this.props.cart.count) + parseInt(count))
     localStorage.setItem('idArr', JSON.stringify(dcount))
     console.log(localStorage.cartCount)
-    this.setState({cart : {
-      count : localStorage.cartCount,
+    let cart = {
+      count : Number(this.props.cart.count) + count,
       idArr : dcount
-    }})
+    }
+    console.log(cart)
+    this.props.onCartDetails(cart)
     this.updateCart(localStorage.cartCount)
   }
 
@@ -88,27 +84,27 @@ class App extends Component {
           method: 'put',
           headers : {"Accept": "application/json", 'Content-Type': 'application/json', "Access-Control-Origin": "*"},
           body : JSON.stringify({
-              email: this.state.user.email,
-              productids: this.state.cart.idArr,
+              email: this.props.user.email,
+              productids: this.props.cart.idArr,
               count : count
           })
       })
       .then(response => response.json())
       .then(res => {
         if(res === 0){
-          this.postItemCart()
+          this.postItemCart(count)
         }
       })
       .catch(err => console.log(err))
   }
-  postItemCart = () => {
+  postItemCart = (count) => {
     fetch('https://vue-react-server.herokuapp.com/postCart', {
           method: 'post',
           headers : {"Accept": "application/json", 'Content-Type': 'application/json', "Access-Control-Origin": "*"},
           body : JSON.stringify({
-            email: this.state.user.email,
-            productids: this.state.cart.idArr,
-            count : Number(this.state.cart.count) + 1
+            email: this.props.user.email,
+            productids: this.props.cart.idArr,
+            count : count
           })
     })
     .then(response => {
@@ -124,17 +120,18 @@ class App extends Component {
           method: 'post',
           headers : {'Content-Type' : 'application/json'},
           body : JSON.stringify({
-            email: this.state.user.email
+            email: this.props.user.email
           })
     })
     .then(response => response.json())
     .then(res => {
-      this.setState({cart : {
+      let cart = {
         count: res[0].totalcount || 0,
         idArr: res[0].productids || []
-      }})
-      localStorage.setItem('cartCount', this.state.cart.count)
-      localStorage.setItem('idArr', JSON.stringify(this.state.cart.idArr))
+      }
+      this.props.onCartDetails(cart)
+      localStorage.setItem('cartCount', this.props.cart.count)
+      localStorage.setItem('idArr', JSON.stringify(this.props.cart.idArr))
     })
     .catch(err => console.log('WHAT ERRR' + err))
   }
@@ -143,7 +140,7 @@ class App extends Component {
       <div className="App">
         <Router>
           <header className="App-header">
-            <Topnav user={this.props.user} cart={this.state.cart} signOut={this.unloaduser}  />
+            <Topnav user={this.props.user} cart={this.props.cart} signOut={this.unloaduser}  />
           </header>
           <section>
             <Route exact={true} path="/" render={() => <Home cartDetails={this.cartDetails}  />} />
@@ -151,7 +148,7 @@ class App extends Component {
             <Route path="/signin" render={() => <Signin loadUser={this.loadUser} />}  />
             <Route path="/register" render={() => <Register user={this.props.user} />} />
             <Route path="/product/:id" render={() => <Product cartDetails={this.cartDetails} />} />
-            <Route path="/Cart" render={() => <Cart cart={this.state.cart} cartDetails={this.cartDetails} />} />
+            <Route path="/Cart" render={() => <Cart cart={this.props.cart} cartDetails={this.cartDetails} />} />
             <Route path="/products" render={() => <Products />} />
           </section> 
           <footer>

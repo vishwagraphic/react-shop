@@ -1,5 +1,5 @@
 import { FETCH_PRODUCTS_PENDING, FETCH_PRODUCTS_SUCCESS, FETCH_PRODUCTS_FAILED,
-    SIGNIN_EMAIL, SIGNIN_PASSWORD, SIGNIN_ERR, FETCH_USER_DETAILS } from './constants'
+    SIGNIN_EMAIL, SIGNIN_PASSWORD, SIGNIN_ERR, FETCH_USER_DETAILS, FETCH_CART_DETAILS } from './constants'
 const intialProductState = {
     dealProducts: [],
     lowCostProducts: []
@@ -67,10 +67,25 @@ const intialUserDetailState = {
 } 
 
 export const userDetails = (state = intialUserDetailState, action) => {
-    console.log(action.payload)
     switch (action.type){
         case FETCH_USER_DETAILS:
             return Object.assign({}, state, {user : action.payload[0], signIn: action.payload[1]})
+        default:
+            return state;
+    }
+}
+
+const intialCartDetailState = {
+    cart: {
+        count: localStorage.cartCount || 0,
+        idArr : JSON.parse(localStorage.getItem('idArr')) || {}
+    }
+} 
+
+export const cartDetails = (state = intialCartDetailState, action={}) => {
+    switch (action.type){
+        case FETCH_CART_DETAILS:
+            return Object.assign({}, state, {cart : action.payload})
         default:
             return state;
     }

@@ -46,6 +46,7 @@ class Signin extends Component {
                     localStorage.setItem('userid', user.id)
                     localStorage.setItem('useremail', user.email)
                     this.props.onUserDetails(user, true)
+                    this.props.loadUser(user, true)
                     this.props.history.push('/')
                 }
             })

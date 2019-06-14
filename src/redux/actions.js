@@ -1,5 +1,5 @@
 import { FETCH_PRODUCTS_PENDING, FETCH_PRODUCTS_SUCCESS, FETCH_PRODUCTS_FAILED,
-SIGNIN_EMAIL, SIGNIN_PASSWORD, SIGNIN_ERR, FETCH_USER_DETAILS } from './constants'
+SIGNIN_EMAIL, SIGNIN_PASSWORD, SIGNIN_ERR, FETCH_USER_DETAILS, FETCH_CART_DETAILS } from './constants'
 
 export const fetchProducts = (user, status) => (dispatch) =>  {
     dispatch({type : FETCH_PRODUCTS_PENDING});
@@ -49,5 +49,12 @@ export const userDetails = (user, status) => (dispatch) => {
     dispatch({
         type: FETCH_USER_DETAILS,
         payload: [user, status]
+    })
+}
+
+export const cartDetails = (cart) => (dispatch) => {
+    dispatch({
+        type: FETCH_CART_DETAILS,
+        payload: cart
     })
 }
