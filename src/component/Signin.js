@@ -2,13 +2,19 @@ import React, {Component} from 'react'
 import {Link, withRouter} from 'react-router-dom';
 import {connect} from 'react-redux'
 import {Form, Button, Container} from 'react-bootstrap'
-import { signInEmailChange, signInPasswordChange, signInErrChange } from '../redux/actions';
+import { signInEmailChange, signInPasswordChange, signInErrChange, userDetails } from '../redux/actions';
 
 const mapStateToProps = state => {
     return{
         signInEmail: state.signInEmailChange.signInEmail,
         signInPassword : state.signInPasswordChange.signInPassword,
-        signInErr : state.signInErrChange.signInErr
+        signInErr : state.signInErrChange.signInErr,
+        user: {
+            id: state.userDetails.user.id,
+            name: state.userDetails.user.name,
+            email: state.userDetails.user.email
+        },
+        signIn : state.userDetails.signIn
     }
 }
 
@@ -16,7 +22,8 @@ const mapDispatchToProps = (dispatch) => {
     return{
         onEmailChange : event => dispatch(signInEmailChange(event.target.value)),
         onPasswordChange : event => dispatch(signInPasswordChange(event.target.value)),
-        onSignInErrChange : val => dispatch(signInErrChange(val))
+        onSignInErrChange : val => dispatch(signInErrChange(val)),
+        onUserDetails : (user, status) => dispatch(userDetails(user, status))
     }
 }
 
@@ -35,10 +42,10 @@ class Signin extends Component {
             .then(response => response.json())
             .then(user => {
                 if(user.name){
-                    this.props.loadUser(user, true)
                     localStorage.setItem('username', user.name)
                     localStorage.setItem('userid', user.id)
                     localStorage.setItem('useremail', user.email)
+                    this.props.onUserDetails(user, true)
                     this.props.history.push('/')
                 }
             })

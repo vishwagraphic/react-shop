@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {BrowserRouter as Router, Route} from 'react-router-dom';
+import {connect} from 'react-redux'
 import Topnav from './component/Topnav'
 import Bottomnav from './component/Bottomnav'
 import Home from './component/Home'
@@ -10,30 +11,45 @@ import Product from './component/Product'
 import Cart from './component/Cart'
 import Products from './component/Products'
 import './App.scss'
+import { userDetails } from './redux/actions';
+
+const mapStateToProps = state => {
+  return{
+      user: {
+          id: state.userDetails.user.id,
+          name: state.userDetails.user.name,
+          email: state.userDetails.user.email
+      },
+      signIn : state.userDetails.signIn
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return{
+    onUserDetails : (user, status) => dispatch(userDetails(user, status))
+  }
+}
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      signIn : false,
-      user: {
-        id: localStorage.userid || '',
-        name: localStorage.username || '',
-        email: localStorage.useremail || ''
-      },
       cart: {
         count: localStorage.cartCount || 0,
         idArr : JSON.parse(localStorage.getItem('idArr')) || {}
       }
     }
   }
-
+  
   unloaduser = () => {
-    this.setState({user : {
-        id: '',
-        name : '',
-        email: '',
-      },
+    let user = {
+      id: '',
+      name : '',
+      email: '',
+    }
+    let signInStatus = false
+    this.props.onUserDetails(user, signInStatus)
+    this.setState({
       cart: {
         count: 0,
         idArr: {}
@@ -42,15 +58,7 @@ class App extends Component {
     localStorage.clear()
   }
 
-  loadUser = (userData, signInStatus) => {
-    console.log(userData)
-    this.setState({user : {
-      id: userData.id,
-      name : userData.name,
-      email: userData.email
-    },
-    signIn : signInStatus
-    })
+  loadUser = () => {
     if (this.state.user.email){
       this.getCartDetails()
     }
@@ -135,13 +143,13 @@ class App extends Component {
       <div className="App">
         <Router>
           <header className="App-header">
-            <Topnav user={this.state.user} loadUser={this.loadUser} cart={this.state.cart} signOut={this.unloaduser}  />
+            <Topnav user={this.props.user} cart={this.state.cart} signOut={this.unloaduser}  />
           </header>
           <section>
             <Route exact={true} path="/" render={() => <Home cartDetails={this.cartDetails}  />} />
             <Route path="/about"  render={() => <About />} />
             <Route path="/signin" render={() => <Signin loadUser={this.loadUser} />}  />
-            <Route path="/register" render={() => <Register user={this.state.user} />} />
+            <Route path="/register" render={() => <Register user={this.props.user} />} />
             <Route path="/product/:id" render={() => <Product cartDetails={this.cartDetails} />} />
             <Route path="/Cart" render={() => <Cart cart={this.state.cart} cartDetails={this.cartDetails} />} />
             <Route path="/products" render={() => <Products />} />
@@ -155,4 +163,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default connect(mapStateToProps, mapDispatchToProps)(App)

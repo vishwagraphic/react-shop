@@ -4,7 +4,9 @@ import { Navbar, Nav, Dropdown, NavItem, } from 'react-bootstrap';
 import logo from '../logo.png'
 import cart from '../cart-icon.png'
 import './Topnav.scss'
+
 const Topnav = (props) => {
+    console.log(props)
     let showSignStatus
     if(props.user.name){
         showSignStatus = <Dropdown as={NavItem}>
@@ -41,4 +43,4 @@ const Topnav = (props) => {
     )
 }
 
-export default withRouter(Topnav);
+export default withRouter(Topnav)

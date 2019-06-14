@@ -1,14 +1,14 @@
 import { FETCH_PRODUCTS_PENDING, FETCH_PRODUCTS_SUCCESS, FETCH_PRODUCTS_FAILED,
-SIGNIN_EMAIL, SIGNIN_PASSWORD, SIGNIN_ERR } from './constants'
+SIGNIN_EMAIL, SIGNIN_PASSWORD, SIGNIN_ERR, FETCH_USER_DETAILS } from './constants'
 
-export const fetchProducts = () => (dispatch) =>  {
+export const fetchProducts = (user, status) => (dispatch) =>  {
     dispatch({type : FETCH_PRODUCTS_PENDING});
     Promise.all([fetch('https://vue-react-server.herokuapp.com/dealsProducts'), fetch('https://vue-react-server.herokuapp.com/lowCostProducts')])
         .then(([res1, res2]) => { 
             return Promise.all([res1.json(), res2.json()]) 
         })
         .then(([res1, res2]) => {
-            console.log([res1, res2])
+            console.log([res1, res2, user, status])
             imgurlExtract(res1, 'deals')
             imgurlExtract(res2, 'lowcost')
             dispatch({
@@ -44,3 +44,10 @@ export const signInErrChange = (val) => ({
     type: SIGNIN_ERR,
     payload : val
 })
+
+export const userDetails = (user, status) => (dispatch) => {
+    dispatch({
+        type: FETCH_USER_DETAILS,
+        payload: [user, status]
+    })
+}

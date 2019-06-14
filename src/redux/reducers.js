@@ -1,5 +1,5 @@
 import { FETCH_PRODUCTS_PENDING, FETCH_PRODUCTS_SUCCESS, FETCH_PRODUCTS_FAILED,
-    SIGNIN_EMAIL, SIGNIN_PASSWORD, SIGNIN_ERR } from './constants'
+    SIGNIN_EMAIL, SIGNIN_PASSWORD, SIGNIN_ERR, FETCH_USER_DETAILS } from './constants'
 const intialProductState = {
     dealProducts: [],
     lowCostProducts: []
@@ -51,6 +51,26 @@ export const signInErrChange = (state = intialSignErrState, action = {}) => {
     switch (action.type){
         case SIGNIN_ERR:
             return Object.assign({}, state, {signInErr : action.payload})
+        default:
+            return state;
+    }
+}
+
+const intialUserDetailState = {
+    user: {
+        id: localStorage.userid || '',
+        name: localStorage.username || '',
+        joined: '',
+        email: localStorage.useremail || ''
+    },
+    signIn: false
+} 
+
+export const userDetails = (state = intialUserDetailState, action) => {
+    console.log(action.payload)
+    switch (action.type){
+        case FETCH_USER_DETAILS:
+            return Object.assign({}, state, {user : action.payload[0], signIn: action.payload[1]})
         default:
             return state;
     }

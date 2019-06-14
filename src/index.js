@@ -8,9 +8,9 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
-import {fetchProducts, signInEmailChange, signInPasswordChange, signInErrChange} from './redux/reducers';
+import {fetchProducts, signInEmailChange, signInPasswordChange, signInErrChange, userDetails} from './redux/reducers';
 const logger = createLogger();
-const rootReducer = combineReducers({fetchProducts, signInEmailChange, signInPasswordChange, signInErrChange})
+const rootReducer = combineReducers({fetchProducts, signInEmailChange, signInPasswordChange, signInErrChange, userDetails})
 const store = createStore(rootReducer, applyMiddleware(thunkMiddleware, logger))
 
 ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementById('root'));
