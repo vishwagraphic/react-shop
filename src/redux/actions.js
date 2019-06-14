@@ -8,7 +8,6 @@ export const fetchProducts = (user, status) => (dispatch) =>  {
             return Promise.all([res1.json(), res2.json()]) 
         })
         .then(([res1, res2]) => {
-            console.log([res1, res2, user, status])
             imgurlExtract(res1, 'deals')
             imgurlExtract(res2, 'lowcost')
             dispatch({
