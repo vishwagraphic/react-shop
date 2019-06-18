@@ -1,6 +1,6 @@
 import {Link, withRouter} from 'react-router-dom';
 import React, {Component} from 'react'
-import {Form, Button, Container} from 'react-bootstrap'
+import {Form, Button, Container, Spinner} from 'react-bootstrap'
 
 class Register extends Component{
     constructor(props){
@@ -9,6 +9,7 @@ class Register extends Component{
             RegisterName: '',
             RegisterEmail: '',
             RegisterPassword: '',
+            loading: false,
             errors: {
                 fullName: '',
                 email: '',
@@ -20,9 +21,11 @@ class Register extends Component{
     }
     handleSubmit = (event) =>{
         event.preventDefault();
-        console.log(this.state)
         if(this.state.errors.fullName !== '' && this.state.RegisterEmail !== '' && this.state.RegisterPassword !== ''){
-            this.setState({errors: {mainErr : ''}})
+            this.setState({
+                errors: {mainErr : ''},
+                loading: true
+            })
             fetch('https://vue-react-server.herokuapp.com/register', {
                 method: 'post',
                 headers : {'Content-Type' : 'application/json'},
@@ -34,15 +37,15 @@ class Register extends Component{
             })
             .then(response => {
                 if(response.status === 200){
-                    this.setState({RegisterErr: false})
-                    this.props.history.push('/signin')
+                    this.setState({RegisterErr: false, loading: false})
+                    this.props.history.push('/regconfirm')
                 }else{
-                    this.setState({RegisterErr: true})
+                    this.setState({RegisterErr: true, loading: false})
                 }
             })
             .catch(err => console.log('WHAT ERRR' + err))
         } else {
-            this.setState({errors: {mainErr : 'Please fill all the fields'}})
+            this.setState({errors: {mainErr : 'Please fill all the fields', loading: false}})
         }
     }
     onInputChange = (event) => {
@@ -95,9 +98,12 @@ class Register extends Component{
         }else{
             registerErrMsg = <p></p>
         }
+        
         return(
-            <div className="mb-3">
-                
+            <div className={this.state.loading ? 'mb-3 loading-icon' : 'mb-3'}>
+                <Spinner animation="border" role="status" className="spinner-loading" >
+                    <span className="sr-only">Loading...</span>
+                </Spinner>
                 <Container className='container my-5 form-width'>
                     <div className="text-danger">{registerErrMsg}</div>
                     <div className="text-danger">{this.state.errors.mainErr}</div>

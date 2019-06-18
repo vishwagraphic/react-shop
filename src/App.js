@@ -7,6 +7,7 @@ import Home from './component/Home'
 import About from './component/About'
 import Signin from './component/Signin'
 import Register from './component/Register'
+import Regconfirm from './component/Regconfirm'
 import Product from './component/Product'
 import Cart from './component/Cart'
 import Products from './component/Products'
@@ -147,6 +148,7 @@ class App extends Component {
             <Route path="/about"  render={() => <About />} />
             <Route path="/signin" render={() => <Signin loadUser={this.loadUser} />}  />
             <Route path="/register" render={() => <Register user={this.props.user} />} />
+            <Route path="/regconfirm" render={() => <Regconfirm />} />
             <Route path="/product/:id" render={() => <Product cartDetails={this.cartDetails} />} />
             <Route path="/Cart" render={() => <Cart cart={this.props.cart} cartDetails={this.cartDetails} />} />
             <Route path="/products" render={() => <Products />} />

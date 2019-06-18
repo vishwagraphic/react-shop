@@ -1,8 +1,8 @@
 import React, {Component} from 'react'
 import {Link, withRouter} from 'react-router-dom';
 import {connect} from 'react-redux'
-import {Form, Button, Container} from 'react-bootstrap'
-import { signInEmailChange, signInPasswordChange, signInErrChange, userDetails } from '../redux/actions';
+import {Form, Button, Container, Spinner} from 'react-bootstrap'
+import { signInEmailChange, signInPasswordChange, signInErrChange, userDetails, responseLoader } from '../redux/actions';
 
 const mapStateToProps = state => {
     return{
@@ -14,7 +14,8 @@ const mapStateToProps = state => {
             name: state.userDetails.user.name,
             email: state.userDetails.user.email
         },
-        signIn : state.userDetails.signIn
+        signIn : state.userDetails.signIn,
+        loading: state.responseLoader.loading
     }
 }
 
@@ -23,13 +24,15 @@ const mapDispatchToProps = (dispatch) => {
         onEmailChange : event => dispatch(signInEmailChange(event.target.value)),
         onPasswordChange : event => dispatch(signInPasswordChange(event.target.value)),
         onSignInErrChange : val => dispatch(signInErrChange(val)),
-        onUserDetails : (user, status) => dispatch(userDetails(user, status))
+        onUserDetails : (user, status) => dispatch(userDetails(user, status)),
+        onResponseLoader : val => dispatch(responseLoader(val))
     }
 }
 
 class Signin extends Component {
     handleSubmit = (event) => {
         event.preventDefault();
+        this.props.onResponseLoader(true)
         if(this.props.signInEmail !== '' && this.props.signInPassword !== ''){
             fetch('https://vue-react-server.herokuapp.com/signIn', {
                 method: 'post',
@@ -45,12 +48,14 @@ class Signin extends Component {
                     localStorage.setItem('username', user.name)
                     localStorage.setItem('userid', user.id)
                     localStorage.setItem('useremail', user.email)
+                    this.props.onResponseLoader(false)
                     this.props.onUserDetails(user, true)
                     this.props.loadUser(user, true)
                     this.props.history.push('/')
                 }
             })
             .catch(() => {
+                this.props.onResponseLoader(false)
                 this.props.onSignInErrChange(true)
             })
         }
@@ -64,7 +69,10 @@ class Signin extends Component {
             signInErrMsg = <p className="text-danger"></p>
         }
         return(              
-            <div className="mb-3">
+            <div className={this.props.loading ? 'mb-3 loading-icon' : 'mb-3'} >
+                <Spinner animation="border" role="status" className="spinner-loading" >
+                    <span className="sr-only">Loading...</span>
+                </Spinner>
                 <Container className='container my-5 form-width'>
                     <div>{signInErrMsg}</div>
                     <Form>

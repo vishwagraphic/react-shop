@@ -1,7 +1,7 @@
 import { FETCH_PRODUCTS_PENDING, FETCH_PRODUCTS_SUCCESS, FETCH_PRODUCTS_FAILED,
-SIGNIN_EMAIL, SIGNIN_PASSWORD, SIGNIN_ERR, FETCH_USER_DETAILS, FETCH_CART_DETAILS } from './constants'
+SIGNIN_EMAIL, SIGNIN_PASSWORD, SIGNIN_ERR, FETCH_USER_DETAILS, FETCH_CART_DETAILS, RESPONSE_LOADER } from './constants'
 
-export const fetchProducts = (user, status) => (dispatch) =>  {
+export const fetchProducts = () => (dispatch) =>  {
     dispatch({type : FETCH_PRODUCTS_PENDING});
     Promise.all([fetch('https://vue-react-server.herokuapp.com/dealsProducts'), fetch('https://vue-react-server.herokuapp.com/lowCostProducts')])
         .then(([res1, res2]) => { 
@@ -57,3 +57,8 @@ export const cartDetails = (cart) => (dispatch) => {
         payload: cart
     })
 }
+
+export const responseLoader = (val) => ({
+    type: RESPONSE_LOADER,
+    payload : val
+})

@@ -1,10 +1,14 @@
+$prod-desc-height: 80px;
+$form-width: 300px;
+$form-min-height: 500px;
+$hover-color: #0069d9;
+
 body{
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased
 }
 a:hover{
   text-decoration: none;
-  /* color: yellow !important; */
 }
 .img-container{
   height:130px; 
@@ -20,7 +24,7 @@ a:hover{
   padding-left: 0;
 }
 .prod-desc{
-  height: 80px;
+  height: $prod-desc-height;
   line-height: 20px;
   overflow-y: hidden;
 }
@@ -36,18 +40,40 @@ nav{
   display: inline-block;
 }
 .form-width{
-  width: 300px;
-  min-height: 700px;
+  width: $form-width;
+  min-height: $form-min-height;
 }
 .pointer{
   cursor: pointer;
 }
 .hover{
   &:hover{
-      color: #0069d9;
+      color: $hover-color;
   }
 }
 .ltn{
   list-style-type: none;
   padding-left: 0;
+}
+
+.spinner-loading{
+  display: none;
+}
+
+.loading-icon{
+  .spinner-loading{
+    display: block;
+    position: absolute;
+    top:40%;
+    left: 50%;
+  }
+  &:before {
+    content: '';
+    top: 0;
+    background:#ccc;
+    opacity:0.7;
+    width: 100%;
+    height: 100%;
+    position:absolute;
+  }
 }

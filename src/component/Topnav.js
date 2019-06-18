@@ -32,7 +32,7 @@ const Topnav = (props) => {
                 
                 <Nav className="mr-auto ml-2">
                   <Link to="/about" className="px-2 text-white">About</Link>
-                  <Link to="/" className="px-2 text-white">Products</Link>
+                  <Link to="/products" className="px-2 text-white">Products</Link>
                 </Nav>
                 <Nav className="ml-auto mr-2">
                     {showSignStatus}

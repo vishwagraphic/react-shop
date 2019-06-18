@@ -1,11 +1,10 @@
 import React from 'react'
-import Mycarousel from './common/Mycarousel'
 
 const About = () => {
     return(
-        <div className="mb-3">
-            <Mycarousel />
-            ABOUT US
+        <div className="my-4 container">
+           <h1>About me</h1>
+           <p>My name is Viswanathan Devarajan. I am a MBA graduate and working as a front end developer.</p>
         </div>    
     )
     
