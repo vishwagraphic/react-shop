@@ -1,32 +1,17 @@
 import { FETCH_PRODUCTS_PENDING, FETCH_PRODUCTS_SUCCESS, FETCH_PRODUCTS_FAILED,
 SIGNIN_EMAIL, SIGNIN_PASSWORD, SIGNIN_ERR, FETCH_USER_DETAILS, FETCH_CART_DETAILS, RESPONSE_LOADER } from './constants'
 
-export const fetchProducts = () => (dispatch) =>  {
-    dispatch({type : FETCH_PRODUCTS_PENDING});
-    Promise.all([fetch('https://vue-react-server.herokuapp.com/dealsProducts'), fetch('https://vue-react-server.herokuapp.com/lowCostProducts')])
-        .then(([res1, res2]) => { 
-            return Promise.all([res1.json(), res2.json()]) 
+export const fetchProducts = (msg, data) => (dispatch) =>  {
+    if(msg === 'pending'){
+        dispatch({type : FETCH_PRODUCTS_PENDING})
+    }else if(msg === 'success'){
+        dispatch({
+            type: FETCH_PRODUCTS_SUCCESS,
+            payload: data
         })
-        .then(([res1, res2]) => {
-            imgurlExtract(res1, 'deals')
-            imgurlExtract(res2, 'lowcost')
-            dispatch({
-                type: FETCH_PRODUCTS_SUCCESS,
-                payload: [res1, res2]
-            })
-        })
-        .catch(error => dispatch({type: FETCH_PRODUCTS_FAILED, payload: error}))
-        function imgurlExtract(products, type) {
-            let imgArr = []
-            products.forEach((product, index) => {
-                imgArr = product.imageurls.split(',')
-                for (let i = 0; i < imgArr.length; i++) {
-                    if (imgArr[i].indexOf('bbystatic') > -1) {
-                        products[index].imageurls = imgArr[i]
-                    }
-                }
-            });
-        }
+    }else if(msg === 'failed'){
+        dispatch({type: FETCH_PRODUCTS_FAILED, payload: data})
+    }
 }
 
 export const signInEmailChange = (text) => ({

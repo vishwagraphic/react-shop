@@ -21,14 +21,34 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => {
     return{
-        onFetchProducts : () => dispatch(fetchProducts())
+        onFetchProducts : (msg, data) => dispatch(fetchProducts(msg, data))
     }
 }
 
 class Home extends Component {
-
     componentWillMount(){
-        this.props.onFetchProducts()
+        this.props.onFetchProducts('pending')
+        Promise.all([fetch('https://vue-react-server.herokuapp.com/dealsProducts'), fetch('https://vue-react-server.herokuapp.com/lowCostProducts')])
+        .then(([res1, res2]) => { 
+            return Promise.all([res1.json(), res2.json()]) 
+        })
+        .then(([res1, res2]) => {
+            imgurlExtract(res1, 'deals')
+            imgurlExtract(res2, 'lowcost')
+            this.props.onFetchProducts('success', [res1, res2])
+        })
+        .catch(error => this.props.onFetchProducts('failed', error))
+        function imgurlExtract(products, type) {
+            let imgArr = []
+            products.forEach((product, index) => {
+                imgArr = product.imageurls.split(',')
+                for (let i = 0; i < imgArr.length; i++) {
+                    if (imgArr[i].indexOf('bbystatic') > -1) {
+                        products[index].imageurls = imgArr[i]
+                    }
+                }
+            });
+        }
     }
     
     render(){
