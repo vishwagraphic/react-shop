@@ -22,17 +22,20 @@ class cartTile extends Component {
     }
     render(){
         const {imageurl, name, price, productid, brand} = this.props
+        const showProduct = () => {
+            this.props.history.push(`/product/${productid}`)
+        }
         if(!this.state.render){
             return null
         } else{
             return(
                 <Row className="border border-top-0 border-left-0 border-right-0 mb-4 pb-3">
                     <Col cols="3">
-                        <img width="auto" height="70px" src={imageurl} alt="big-product" />
+                        <img width="auto" height="70px" src={imageurl} onClick={showProduct} alt="big-product" />
                     </Col>
                     <Col cols="4">
                         <ul className="ltn mt-2">
-                            <li className="font-weight-bold pointer hover" >{name} </li>
+                            <li className="font-weight-bold pointer hover" onClick={showProduct}>{name} </li>
                             <li>{brand}</li>
                         </ul>
                     </Col>
