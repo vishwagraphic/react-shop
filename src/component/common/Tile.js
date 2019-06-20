@@ -6,7 +6,7 @@ import {Button, Card, Col} from 'react-bootstrap'
 const Tile = (props) => {
     const {id, name, brand, imageurl, rating, price} = props
     const showProduct = () => {
-        this.props.history.push(`/product/${this.props.id}`)
+        props.history.push(`/product/${id}`)
     }
     return(
         <Col>

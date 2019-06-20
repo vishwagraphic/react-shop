@@ -57,9 +57,9 @@ class Product extends Component{
                         <Col>
                             <p>Get it <strong>Tue, May 24 - Friday May 27</strong> if you choose FREE Shipping at checkout.</p>
                             <p>Get it <strong>Mon, May 23</strong> if you order within 31 hrs 33 mins and choose paid shipping at checkout.</p>
-                            <p>In Stock</p>
+                            {/* <p>In Stock</p>
                             <p>Out of Stock</p>
-                            <p>Qty </p>
+                            <p>Qty </p> */}
                             <Button block variant="primary" onClick={() => this.props.cartDetails(1, this.state.productDetail.productid)}>Add to cart</Button>
                             <Button block variant="danger">Buy now</Button><br />
                             <p>Sold by Product brand</p>

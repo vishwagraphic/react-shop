@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {withRouter} from 'react-router-dom'
-import {Row, Col} from 'react-bootstrap'
+import {Row, Col, Button} from 'react-bootstrap'
 
 class cartTile extends Component { 
     constructor(props) {
@@ -26,18 +26,18 @@ class cartTile extends Component {
             return null
         } else{
             return(
-                <Row>
+                <Row className="border border-top-0 border-left-0 border-right-0 mb-4 pb-3">
                     <Col cols="3">
-                    <img width="auto" height="70px" src={imageurl} alt="big-product" />
+                        <img width="auto" height="70px" src={imageurl} alt="big-product" />
                     </Col>
                     <Col cols="4">
-                        <ul className="ltn">
+                        <ul className="ltn mt-2">
                             <li className="font-weight-bold pointer hover" >{name} </li>
                             <li>{brand}</li>
                         </ul>
                     </Col>
                     <Col >
-                            <div className="font-weight-bold text-danger">${price}</div>
+                        <div className="font-weight-bold text-danger mt-4 text-right">${price}</div>
                     </Col>
                     <Col >
                         <div className="" style={{width: '80px'}}>Quantity: 
@@ -46,7 +46,9 @@ class cartTile extends Component {
                             
                     </Col>
                     <Col >
-                    <div onClick={this.onDelete} className="text-info">Delete</div>
+                        <div className="text-info mt-4">
+                            <Button className="btn-danger" onClick={this.onDelete}>Delete</Button>
+                        </div>
                     </Col>
                 </Row>
             )
