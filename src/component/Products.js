@@ -1,6 +1,19 @@
 import React, {Component} from 'react'
-import {Alert, Container, Row} from 'react-bootstrap'
+import {connect} from 'react-redux'
+import {Alert, Container, Row, Spinner} from 'react-bootstrap'
 import Tile from './common/Tile'
+import { responseLoader } from './../redux/actions'
+
+const mapStateToProps = state => {
+    return{
+        loading: state.responseLoader.loading
+    }
+}
+const mapDispatchToProps = (dispatch) => {
+    return{
+        onResponseLoader : val => dispatch(responseLoader(val))
+    }
+}
 
 class AllProducts extends Component {
     constructor(props) {
@@ -11,6 +24,7 @@ class AllProducts extends Component {
     }
     
     componentDidMount(){
+        this.props.onResponseLoader(true)
         let params = new URLSearchParams(document.location.search.substring(1))
         let paramsType = params.get("type")
         Promise.all([fetch('https://vue-react-server.herokuapp.com/products?type=' + paramsType)])
@@ -20,7 +34,12 @@ class AllProducts extends Component {
         .then(([res]) => {
             imgurlExtract(res, 'deals')
             this.setState({products : res})
-        });
+            this.props.onResponseLoader(false)
+        })
+        .catch(err => {
+            console.log(err)
+            this.props.onResponseLoader(false)
+        })
         function imgurlExtract(products) {
             let imgArr = []
             products.forEach((product, index) => {
@@ -48,7 +67,10 @@ class AllProducts extends Component {
         const ProductType = this.state.products[0] !== undefined ? this.state.products[0].type : ''
 
         return(
-            <div className="mb-3">
+            <div className={this.props.loading ? 'loading-icon mb-3' : ' mb-3'}>
+                <Spinner animation="border" role="status" className="spinner-loading" >
+                    <span className="sr-only">Loading...</span>
+                </Spinner>
                 <div className="container">
                     <Alert variant="info" className="clearfix mt-3" >
                         <span className="d-inline-block py-1 mr-auto font-weight-bold">{ProductType}</span>
@@ -64,4 +86,4 @@ class AllProducts extends Component {
     }
 }
 
-export default AllProducts;
+export default connect(mapStateToProps, mapDispatchToProps)(AllProducts)

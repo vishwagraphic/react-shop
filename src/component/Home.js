@@ -1,10 +1,10 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import Mycarousel from './common/Mycarousel'
-import {Alert, Button, Container, Row} from 'react-bootstrap'
+import {Alert, Button, Container, Row, Spinner} from 'react-bootstrap'
 import {Link} from 'react-router-dom';
 import Tile from './common/Tile'
-import { fetchProducts } from './../redux/actions'
+import { fetchProducts, responseLoader } from './../redux/actions'
 
 const mapStateToProps = state => {
     if(state.fetchProducts.isPending === false) {
@@ -12,22 +12,27 @@ const mapStateToProps = state => {
             dealProducts: state.fetchProducts.dealProducts,
             isPending : state.fetchProducts.isPending ,
             lowCostProducts: state.fetchProducts.lowCostProducts,
-            error: state.fetchProducts.error
+            error: state.fetchProducts.error,
+            loading: state.responseLoader.loading
         }
     }else {
-        return {}
+        return {
+            loading: state.responseLoader.loading
+        }
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return{
-        onFetchProducts : (msg, data) => dispatch(fetchProducts(msg, data))
+        onFetchProducts : (msg, data) => dispatch(fetchProducts(msg, data)),
+        onResponseLoader : val => dispatch(responseLoader(val))
     }
 }
 
 class Home extends Component {
     componentWillMount(){
         this.props.onFetchProducts('pending')
+        this.props.onResponseLoader(true)
         Promise.all([fetch('https://vue-react-server.herokuapp.com/dealsProducts'), fetch('https://vue-react-server.herokuapp.com/lowCostProducts')])
         .then(([res1, res2]) => { 
             return Promise.all([res1.json(), res2.json()]) 
@@ -36,8 +41,12 @@ class Home extends Component {
             imgurlExtract(res1, 'deals')
             imgurlExtract(res2, 'lowcost')
             this.props.onFetchProducts('success', [res1, res2])
+            this.props.onResponseLoader(false)
         })
-        .catch(error => this.props.onFetchProducts('failed', error))
+        .catch(error => {
+            this.props.onFetchProducts('failed', error)
+            this.props.onResponseLoader(false)
+        })
         function imgurlExtract(products, type) {
             let imgArr = []
             products.forEach((product, index) => {
@@ -67,8 +76,16 @@ class Home extends Component {
         }
        
         return(
-            isPending ? 'Loading' : error ? 'Error' :
-            <div className="mb-3">
+            isPending ? <div className='mb-3'>
+                <Spinner animation="border" role="status" className="spinner-loading" >
+                    <span className="sr-only">Loading...</span>
+                </Spinner>
+            </div> 
+            : error ? <div>Server Error</div> :
+            <div className={this.props.loading ? 'mb-3 loading-icon' : 'mb-3'}>
+                <Spinner animation="border" role="status" className="spinner-loading" >
+                    <span className="sr-only">Loading...</span>
+                </Spinner>
                 <Mycarousel />
                 <div className="container">
                     <Alert variant="info" className="clearfix mt-3" >

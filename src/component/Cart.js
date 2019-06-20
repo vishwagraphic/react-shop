@@ -1,6 +1,20 @@
 import React, {Component} from 'react'
-import { Container, Alert } from 'react-bootstrap';
+import {connect} from 'react-redux'
+import { Container, Alert, Spinner } from 'react-bootstrap';
 import CartTile from './common/CartTile'
+import { responseLoader } from './../redux/actions'
+
+
+const mapStateToProps = state => {
+    return{
+        loading: state.responseLoader.loading
+    }
+}
+const mapDispatchToProps = (dispatch) => {
+    return{
+        onResponseLoader : val => dispatch(responseLoader(val))
+    }
+}
 
 class Cart extends Component{
     constructor(props) {
@@ -16,6 +30,7 @@ class Cart extends Component{
         this.props.cartDetails(Number(count), id)
     }
     componentDidMount(){
+        this.props.onResponseLoader(true)
         let ids = this.props.cart.idArr || {}
         fetch(`https://vue-react-server.herokuapp.com/cart`, {
             method: 'post',
@@ -29,6 +44,11 @@ class Cart extends Component{
         .then(response => response.json())
         .then(cartProduct => {
             this.setState({cartData : cartProduct})
+            this.props.onResponseLoader(false)
+        })
+        .catch(err => {
+            console.log(err)
+            this.props.onResponseLoader(false)
         })
     }
     
@@ -45,14 +65,19 @@ class Cart extends Component{
                        brand={data.brand} imageurl={data.imageurls} quantity={data.quantity} /> 
         })
         return(
-            <div className="container my-3">
-                <Alert variant="secondary" show className="clearfix"><span className="dib py-1 font-weight-bold">Your Cart Details</span></Alert>
-                <Container>
-                    {ProductCartTile}
-                </Container>
+            <div className={this.props.loading ? 'loading-icon mb-3' : ' mb-3'}>
+                <Spinner animation="border" role="status" className="spinner-loading" >
+                    <span className="sr-only">Loading...</span>
+                </Spinner>
+                <div className="container my-3">
+                    <Alert variant="secondary" show className="clearfix"><span className="dib py-1 font-weight-bold">Your Cart Details</span></Alert>
+                    <Container>
+                        {ProductCartTile}
+                    </Container>
+                </div>
             </div>
         )
     }
 }
 
-export default Cart
+export default connect(mapStateToProps, mapDispatchToProps)(Cart)
