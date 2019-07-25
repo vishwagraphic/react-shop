@@ -21,23 +21,45 @@ const Topnav = (props) => {
     }
     return(
         <div>
-            
-            <Navbar fixed="top" bg="danger" variant="danger">
+            {/* <Navbar fixed="top" expand="lg" bg="danger" className="mb-3">
+                <Navbar.Brand>
+                    <Link exact="true" to="/">
+                        <img src={logo} alt="logo" className="App-logo" />
+                        <span className="text-yellow my-2 d-inline-block logo">
+                            REACT-SHOPPING
+                        </span>
+                    </Link>
+                </Navbar.Brand>
+                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                <Navbar.Collapse id="basic-navbar-nav" bg="">
+                    <Nav className="mr-auto ml-2">
+                        <Nav.Link><Link to="/about" className="px-2 text-white">About</Link></Nav.Link>
+                        <Nav.Link><Link to="/products" className="px-2 text-white">Products</Link></Nav.Link>
+                    </Nav>
+                    <Nav.Link className="ml-auto mr-2">
+                        {showSignStatus}
+                        <Link className="px-2 text-white cart-icon" to="/Cart"><span className="cart-count">{props.cart.count}</span><img src={cart} alt="cart" /></Link>
+                    </Nav.Link>
+                </Navbar.Collapse>
+            </Navbar> */}
+            <Navbar fixed="top" bg="danger" expand="lg"  variant="light">
                 <Link exact="true" to="/">
                     <img src={logo} alt="logo" className="App-logo" />
                     <span className="text-yellow my-2 d-inline-block logo">
                         REACT-SHOPPING
                     </span>
                 </Link>
-                
-                <Nav className="mr-auto ml-2">
-                  <Link to="/about" className="px-2 text-white">About</Link>
-                  <Link to="/products" className="px-2 text-white">Products</Link>
-                </Nav>
-                <Nav className="ml-auto mr-2">
-                    {showSignStatus}
+                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                <Navbar.Collapse id="basic-navbar-nav" bg="">
+                    <Nav className="mr-auto ml-2">
+                        <Link to="/about" className="px-2 text-white">About</Link>
+                        <Link to="/products" className="px-2 text-white">Products</Link>
+                    </Nav>
+                    <Nav className="ml-auto mr-2">
+                        {showSignStatus}
+                    </Nav>
                     <Link className="px-2 text-white cart-icon" to="/Cart"><span className="cart-count">{props.cart.count}</span><img src={cart} alt="cart" /></Link>
-                </Nav>
+                </Navbar.Collapse>
             </Navbar>
         </div>    
     )

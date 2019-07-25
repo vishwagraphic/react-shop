@@ -143,7 +143,7 @@ class App extends Component {
           <header className="App-header">
             <Topnav user={this.props.user} cart={this.props.cart} signOut={this.unloaduser}  />
           </header>
-          <section>
+          <section class="mb-5">
             <Route exact={true} path="/" render={() => <Home cartDetails={this.cartDetails}  />} />
             <Route path="/about"  render={() => <About />} />
             <Route path="/signin" render={() => <Signin loadUser={this.loadUser} />}  />
